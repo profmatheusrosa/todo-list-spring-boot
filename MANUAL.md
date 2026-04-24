@@ -121,10 +121,55 @@ Como o frontend Angular roda em uma porta diferente (4200), precisamos permitir 
 
 Após iniciar o backend (`mvn spring-boot:run`), você pode testar os endpoints com ferramentas como:
 
-- **Postman** ou **Insomnia** para requisições HTTP
-- **curl** no terminal
+- **Postman** (interface gráfica, mais fácil para iniciantes)
+- **curl** (linha de comando)
+- **Insomnia** (similar ao Postman)
 
-Exemplos:
+### Testando com Postman
+
+1. Baixe e instale o Postman em https://www.postman.com/
+2. Abra o Postman e crie uma nova coleção chamada "Todo API"
+3. Adicione os seguintes requests:
+
+#### 1. Listar tarefas (GET)
+- Método: GET
+- URL: `http://localhost:8080/api/tasks`
+- Clique em "Send"
+
+#### 2. Criar tarefa (POST)
+- Método: POST
+- URL: `http://localhost:8080/api/tasks`
+- Headers: Adicione `Content-Type: application/json`
+- Body: Selecione "raw" e JSON:
+```json
+{
+  "title": "Aprender Spring Boot",
+  "description": "Estudar este projeto",
+  "done": false
+}
+```
+- Clique em "Send"
+
+#### 3. Buscar tarefa por ID (GET)
+- Método: GET
+- URL: `http://localhost:8080/api/tasks/1` (substitua 1 pelo ID real)
+- Clique em "Send"
+
+#### 4. Atualizar tarefa (PUT)
+- Método: PUT
+- URL: `http://localhost:8080/api/tasks/1` (substitua 1 pelo ID)
+- Headers: `Content-Type: application/json`
+- Body: JSON com dados atualizados
+- Clique em "Send"
+
+#### 5. Excluir tarefa (DELETE)
+- Método: DELETE
+- URL: `http://localhost:8080/api/tasks/1` (substitua 1 pelo ID)
+- Clique em "Send"
+
+### Testando com curl
+
+Exemplos no terminal:
 
 ```bash
 # Listar tarefas
