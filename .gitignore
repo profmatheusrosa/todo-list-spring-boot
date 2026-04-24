@@ -1,0 +1,16 @@
+# Arquivos e diretórios desnecessários para execução do projeto
+
+# Maven build outputs
+target/
+
+# Maven wrapper (opcional, se Maven estiver instalado)
+.mvn/
+
+# Angular dependencies
+frontend/node_modules/
+
+# Angular cache
+frontend/.angular/
+
+# VS Code settings
+.vscode/

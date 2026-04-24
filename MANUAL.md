@@ -98,6 +98,74 @@ O serviço organiza a lógica de uso dos dados. Ele recebe o repositório por in
 - `update(id, task)`
 - `delete(id)`
 
+## 7. O controlador REST
+
+Arquivo: `src/main/java/com/example/todo/controller/TaskController.java`
+
+O controlador cria os endpoints HTTP. Cada método tem uma anotação como `@GetMapping`, `@PostMapping`, etc.
+
+Exemplos de endpoints:
+
+- `GET /api/tasks` - lista todas as tarefas
+- `POST /api/tasks` - cria uma nova tarefa
+- `PUT /api/tasks/{id}` - atualiza uma tarefa
+- `DELETE /api/tasks/{id}` - exclui uma tarefa
+
+## 8. Configuração de CORS
+
+Arquivo: `src/main/java/com/example/todo/config/CorsConfig.java`
+
+Como o frontend Angular roda em uma porta diferente (4200), precisamos permitir requisições cross-origin. A classe `CorsConfig` configura isso.
+
+## 9. Testando a API
+
+Após iniciar o backend (`mvn spring-boot:run`), você pode testar os endpoints com ferramentas como:
+
+- **Postman** ou **Insomnia** para requisições HTTP
+- **curl** no terminal
+
+Exemplos:
+
+```bash
+# Listar tarefas
+curl http://localhost:8080/api/tasks
+
+# Criar tarefa
+curl -X POST http://localhost:8080/api/tasks \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Aprender Spring Boot", "description": "Estudar este projeto", "done": false}'
+
+# Buscar tarefa por ID
+curl http://localhost:8080/api/tasks/1
+
+# Atualizar tarefa
+curl -X PUT http://localhost:8080/api/tasks/1 \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Aprender Spring Boot", "description": "Projeto concluído", "done": true}'
+
+# Excluir tarefa
+curl -X DELETE http://localhost:8080/api/tasks/1
+```
+
+## 10. Banco de dados H2
+
+O projeto usa H2 em memória. Para acessar o console H2:
+
+1. Inicie a aplicação
+2. Abra `http://localhost:8080/h2-console`
+3. Use JDBC URL: `jdbc:h2:mem:testdb`
+4. Usuário: `sa`, Senha: (vazio)
+
+## 11. Próximos passos para aprender
+
+- Adicione validação com `@Valid` e `BindingResult`
+- Implemente autenticação com Spring Security
+- Adicione testes unitários com JUnit e Mockito
+- Integre com um banco real como PostgreSQL
+- Adicione documentação da API com Swagger
+
+Este projeto é um ponto de partida. Explore o código, faça modificações e experimente!
+
 O método `update` primeiro busca a tarefa existente e só então altera os campos.
 
 ### Por que usar `TaskService`?

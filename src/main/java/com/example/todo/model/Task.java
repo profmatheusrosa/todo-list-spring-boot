@@ -6,10 +6,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * Entidade JPA que representa uma tarefa (Task) no banco de dados.
+ * @Entity indica que esta classe é uma entidade JPA.
+ * @Table define o nome da tabela no banco.
+ */
 @Entity
 @Table(name = "tasks")
 public class Task {
 
+    // Chave primária, gerada automaticamente pelo banco
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,16 +24,18 @@ public class Task {
     private String description;
     private boolean done;
 
+    // Construtor padrão necessário para JPA
     public Task() {
-        // constructor required by JPA
     }
 
+    // Construtor para facilitar criação de objetos
     public Task(String title, String description, boolean done) {
         this.title = title;
         this.description = description;
         this.done = done;
     }
 
+    // Getters e setters para acesso aos campos
     public Long getId() {
         return id;
     }
