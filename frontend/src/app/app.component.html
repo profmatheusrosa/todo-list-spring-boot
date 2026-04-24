@@ -1,0 +1,39 @@
+<div class="app-container">
+  <h1>{{ title }}</h1>
+
+  <section class="form-section">
+    <h2>Nova tarefa</h2>
+    <div class="field">
+      <label for="title">Título</label>
+      <input id="title" name="title" [(ngModel)]="newTask.title" placeholder="Digite o título" />
+    </div>
+    <div class="field">
+      <label for="description">Descrição</label>
+      <textarea id="description" name="description" [(ngModel)]="newTask.description" placeholder="Digite a descrição"></textarea>
+    </div>
+    <button (click)="addTask()">Adicionar tarefa</button>
+  </section>
+
+  <section class="list-section">
+    <h2>Minhas tarefas</h2>
+    <div *ngIf="loading">Carregando tarefas...</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+
+    <div *ngIf="!loading && tasks.length === 0" class="empty">Nenhuma tarefa encontrada.</div>
+
+    <ul>
+      <li *ngFor="let task of tasks" [class.done]="task.done">
+        <div class="task-top">
+          <div>
+            <strong>{{ task.title }}</strong>
+            <p>{{ task.description }}</p>
+          </div>
+          <div class="buttons">
+            <button (click)="toggleDone(task)">{{ task.done ? 'Reabrir' : 'Concluir' }}</button>
+            <button class="delete" (click)="deleteTask(task)">Excluir</button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </section>
+</div>

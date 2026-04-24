@@ -1,0 +1,12 @@
+{
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.jdt.ls.java.home": "C:\\desenvolvimento\\.jdks\\jdk-23",
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-23",
+            "path": "C:\\desenvolvimento\\.jdks\\jdk-23",
+            "default": true
+        }
+    ]
+}
