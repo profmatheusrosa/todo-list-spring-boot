@@ -12,12 +12,33 @@ export class AppComponent implements OnInit {
   tasks: Task[] = [];
   newTask: Task = { title: '', description: '', done: false } as Task;
   loading = false;
+  isDarkMode = false;
   error = '';
 
   constructor(private taskService: TaskService) {}
 
   ngOnInit(): void {
     this.loadTasks();
+    this.loadTheme();
+  }
+
+  loadTheme(): void {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      this.isDarkMode = true;
+      document.body.classList.add('dark-mode');
+    }
+  }
+
+  toggleDarkMode(): void {
+    this.isDarkMode = !this.isDarkMode;
+    if (this.isDarkMode) {
+      document.body.classList.add('dark-mode');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.body.classList.remove('dark-mode');
+      localStorage.setItem('theme', 'light');
+    }
   }
 
   loadTasks(): void {
@@ -80,5 +101,31 @@ export class AppComponent implements OnInit {
         console.error(err);
       }
     });
+  }
+
+  toggleExpand(task: Task): void {
+    task.expanded = !task.expanded;
+  }
+
+  saveEdit(task: Task): void {
+    if ((task as any).isEditing) {
+      this.taskService.updateTask(task.id!, task).subscribe({
+        next: updated => {
+          (task as any).isEditing = false;
+        },
+        error: err => {
+          this.error = 'Erro ao salvar alterações.';
+          console.error(err);
+        }
+      });
+    } else {
+      (task as any).isEditing = true;
+      // Foco opcional no input via template se necessário
+    }
+  }
+
+  cancelEdit(task: Task): void {
+    (task as any).isEditing = false;
+    this.loadTasks();
   }
 }
