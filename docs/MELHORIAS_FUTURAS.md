@@ -12,7 +12,7 @@ O banco H2 é ótimo para testes, mas não para produção.
 *   **Troca de Banco:** Substituir o H2 por um banco relacional real, como **PostgreSQL** ou **MySQL**.
 *   **Migrations:** Ao invés de deixar o Hibernate criar as tabelas automaticamente (`spring.jpa.hibernate.ddl-auto=update`), aprender a usar ferramentas de versionamento de banco de dados como **Flyway** ou **Liquibase**.
 
-## [ ] 3. Tratamento de Erros e Validação (Backend)
+## [x] 3. Tratamento de Erros e Validação (Backend)
 *   **Validações:** Adicionar a dependência `spring-boot-starter-validation`. Usar anotações como `@NotBlank`, `@Size`, e `@NotNull` na classe `Task` (ou melhor, criar DTOs - *Data Transfer Objects*) para garantir que uma tarefa não seja salva sem título, por exemplo.
 *   **Tratamento Global de Exceções:** Criar uma classe anotada com `@ControllerAdvice` para capturar erros (como "Tarefa não encontrada" ou erros de validação) e retornar mensagens de erro padronizadas e amigáveis (JSON) em vez da página de erro padrão do Spring.
 

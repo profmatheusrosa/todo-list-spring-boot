@@ -1,12 +1,16 @@
 package com.example.todo.controller;
 
+import com.example.todo.dto.TaskDTO;
 import com.example.todo.model.Task;
 import com.example.todo.service.TaskService;
+import com.example.todo.exception.ResourceNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Controlador REST para gerenciar tarefas (Tasks).
@@ -30,50 +34,54 @@ public class TaskController {
      * @return Lista de tarefas em JSON.
      */
     @GetMapping
-    public List<Task> getAllTasks() {
-        return taskService.findAll();
+    public List<TaskDTO> getAllTasks() {
+        return taskService.findAll().stream()
+                .map(TaskDTO::new)
+                .collect(Collectors.toList());
     }
 
     /**
      * GET /api/tasks/{id} - Busca uma tarefa por ID.
      * @param id ID da tarefa.
-     * @return Tarefa se encontrada, ou 404 se não.
+     * @return Tarefa se encontrada, ou lança ResourceNotFoundException se não.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
-        return taskService.findById(id)
-                .map(ResponseEntity::ok)  // Retorna 200 com a tarefa
-                .orElseGet(() -> ResponseEntity.notFound().build());  // Retorna 404
+    public ResponseEntity<TaskDTO> getTaskById(@PathVariable Long id) {
+        Task task = taskService.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Tarefa com ID " + id + " não foi encontrada."));
+        return ResponseEntity.ok(new TaskDTO(task));
     }
 
     /**
-     * POST /api/tasks - Cria uma nova tarefa.
-     * @param task Dados da tarefa no corpo da requisição (JSON).
+     * POST /api/tasks - Cria uma nova tarefa com validação.
+     * @param taskDTO Dados da tarefa no corpo da requisição (JSON).
      * @return Tarefa criada com status 201.
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Task createTask(@RequestBody Task task) {
-        return taskService.save(task);
+    public TaskDTO createTask(@Valid @RequestBody TaskDTO taskDTO) {
+        Task task = taskDTO.toEntity();
+        Task savedTask = taskService.save(task);
+        return new TaskDTO(savedTask);
     }
 
     /**
-     * PUT /api/tasks/{id} - Atualiza uma tarefa existente.
+     * PUT /api/tasks/{id} - Atualiza uma tarefa existente com validação.
      * @param id ID da tarefa.
-     * @param task Novos dados da tarefa.
-     * @return Tarefa atualizada ou 404 se não encontrada.
+     * @param taskDTO Novos dados da tarefa.
+     * @return Tarefa atualizada ou lança ResourceNotFoundException se não encontrada.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
-        return taskService.update(id, task)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<TaskDTO> updateTask(@PathVariable Long id, @Valid @RequestBody TaskDTO taskDTO) {
+        Task updatedTask = taskService.update(id, taskDTO.toEntity())
+                .orElseThrow(() -> new ResourceNotFoundException("Tarefa com ID " + id + " não foi encontrada."));
+        return ResponseEntity.ok(new TaskDTO(updatedTask));
     }
 
     /**
      * DELETE /api/tasks/{id} - Exclui uma tarefa.
      * @param id ID da tarefa.
-     * @return 204 se excluída, ou 404 se não encontrada.
+     * @return 204 se excluída, ou lança ResourceNotFoundException se não encontrada.
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
@@ -81,6 +89,6 @@ public class TaskController {
             taskService.delete(id);
             return ResponseEntity.noContent().build();  // 204 No Content
         }
-        return ResponseEntity.notFound().build();  // 404 Not Found
+        throw new ResourceNotFoundException("Tarefa com ID " + id + " não foi encontrada.");
     }
 }
